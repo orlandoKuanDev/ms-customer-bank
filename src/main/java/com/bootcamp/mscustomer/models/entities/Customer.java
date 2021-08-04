@@ -12,7 +12,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-@Document(collation = "customers")
+@Document(collection = "customers")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,12 +21,11 @@ public class Customer {
     @Id
     private String id;
     @NotBlank
-    @Size(max = 140)
-    private String name;
     private String code;
     //@NaturalId
     private String iban;
-    private String names;
+    @Size(max = 140)
+    private String name;
     private String surname;
     private String phone;
     private String address;
