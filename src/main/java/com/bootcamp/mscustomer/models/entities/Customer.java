@@ -12,9 +12,7 @@ import javax.validation.constraints.Size;
 @Document(collection = "customers")
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Customer {
     @Id
     private String id;
@@ -26,5 +24,6 @@ public class Customer {
     private String surname;
     private String phone;
     private String address;
+    @Valid
     private CustomerType customerType;
 }

@@ -5,6 +5,7 @@ import com.bootcamp.mscustomer.models.dto.CustomerDTO;
 import com.bootcamp.mscustomer.models.entities.Customer;
 import com.bootcamp.mscustomer.models.entities.CustomerType;
 import com.bootcamp.mscustomer.repositories.CustomerRepository;
+import com.bootcamp.mscustomer.repositories.CustomerTypeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ public class CustomerService implements ICustomerService{
     @Autowired
     private CustomerRepository customerRepository;
 
+    @Autowired
+    private CustomerTypeRepository customerTypeRepository;
 
     @Override
     public Flux<Customer> findAll() {
@@ -37,34 +40,14 @@ public class CustomerService implements ICustomerService{
     }
 
     @Override
-    public Mono<Customer> save(Customer customerDTO) {
-        return customerRepository.save(customerDTO);
+    public Mono<Customer> save(Customer customer) {
+        return customerRepository.save(customer);
     }
 
     @Override
     public Mono<ApiResponse<Object>> saveAll(Customer customerDTO) {
-        return Mono.just(customerDTO)
-                .flatMap(customerCreate -> {
-                    Customer customer = new Customer();
-                    customer.setName(customerCreate.getName());
-                    customer.setSurname(customerCreate.getSurname());
-                    customer.setCode(customerCreate.getCode());
-                    customer.setIban(customerCreate.getIban());
-                    customer.setPhone(customerCreate.getPhone());
-                    customer.setAddress(customer.getAddress());
-                    CustomerType customerType = new CustomerType();
-                    customerType.setName(customer.getCustomerType().getName());
-                    //BeanUtils.copyProperties(customer.getCustomerType(), customerType);
-                    customer.setCustomerType(customerType);
-                    return customerRepository.save(customer);
-                }).map(customer -> ApiResponse.builder()
-                        .status(HttpStatus.CREATED)
-                        .message("Customer create successfully")
-                        .data(customer)
-                        .build());
+        return null;
     }
-
-
 
     @Override
     public Mono<Customer> update(String id, Customer customer) {

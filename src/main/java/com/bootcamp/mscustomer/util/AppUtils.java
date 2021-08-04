@@ -16,13 +16,14 @@ public class AppUtils {
     }
 
     public static Customer dtoToEntity(CustomerDTO customerDTO) {
-        return Customer.builder()
+        return null;
+        /*return Customer.builder()
                 .code(customerDTO.getCode())
                 .iban(customerDTO.getIban())
                 .name(customerDTO.getName())
                 .phone(customerDTO.getPhone())
                 .surname(customerDTO.getSurname())
                 .address(customerDTO.getAddress())
-                .build();
+                .build();*/
     }
 }

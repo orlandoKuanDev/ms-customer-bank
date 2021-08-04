@@ -53,6 +53,12 @@ public class CustomerController {
         return customerService.save(request);
     }
 
+    @PostMapping("/all")
+    public Mono<ApiResponse<Object>> createAll(@Valid @RequestBody Customer request) {
+        LOGGER.info("create: {}", request);
+        return customerService.saveAll(request);
+    }
+
     @PutMapping
     public Mono<ResponseEntity<Customer>> update(@PathVariable(value = "id") String id,
                                  @Valid @RequestBody Customer customer) {
