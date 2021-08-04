@@ -1,8 +1,10 @@
 package com.bootcamp.mscustomer.controllers;
 
+import com.bootcamp.mscustomer.common.ApiResponse;
+import com.bootcamp.mscustomer.models.dto.CustomerDTO;
 import com.bootcamp.mscustomer.models.entities.Customer;
-import com.bootcamp.mscustomer.models.entities.CustomerType;
 import com.bootcamp.mscustomer.services.CustomerService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/customer")
+@Slf4j(topic = "CUSTOMER_CONTROLLER")
 public class CustomerController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerController.class);
 
@@ -45,27 +48,17 @@ public class CustomerController {
     }
 
     @PostMapping
-    public Mono<Customer> create(@Valid @RequestBody Customer customer) {
-        LOGGER.info("create: {}", customer);
-        return customerService.save(customer);
+    public Mono<Customer> create(@Valid @RequestBody Customer request) {
+        LOGGER.info("create: {}", request);
+        return customerService.save(request);
     }
-    
+
+    @PutMapping
     public Mono<ResponseEntity<Customer>> update(@PathVariable(value = "id") String id,
                                  @Valid @RequestBody Customer customer) {
         LOGGER.info("update: {}", customer);
-        return customerService.findById(id)
-                .flatMap(existCustomer -> {
-                    existCustomer.setName(customer.getName());
-                    existCustomer.setCode(customer.getCode());
-                    existCustomer.setIban(customer.getIban());
-                    existCustomer.setCustomerType(CustomerType.builder()
-                                    .name(customer.getCustomerType().getName())
-                            .build());
-                    existCustomer.setPhone(customer.getPhone());
-                    existCustomer.setAddress(customer.getAddress());
-                    existCustomer.setSurname(customer.getSurname());
-                    return customerService.save(existCustomer);
-                }).map(updateCustomer -> new ResponseEntity<>(updateCustomer, HttpStatus.OK))
+        return customerService.update(id, customer)
+                .map(updateCustomer -> new ResponseEntity<>(updateCustomer, HttpStatus.OK))
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 }
