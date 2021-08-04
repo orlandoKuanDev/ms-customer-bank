@@ -9,6 +9,8 @@ public interface ICustomerService {
 
     public Mono<Customer> findById(String id);
 
+    public Mono<Customer> findByName(String name);
+
     public Mono<Customer> save(Customer customer);
 
     public Mono<Customer> update(String id, Customer message);

@@ -24,6 +24,11 @@ public class CustomerService implements ICustomerService{
     }
 
     @Override
+    public Mono<Customer> findByName(String name) {
+        return customerRepository.findByName(name);
+    }
+
+    @Override
     public Mono<Customer> save(Customer customer) {
         return customerRepository.save(customer);
     }
