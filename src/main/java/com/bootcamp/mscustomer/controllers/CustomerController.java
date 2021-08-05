@@ -1,7 +1,6 @@
 package com.bootcamp.mscustomer.controllers;
 
 import com.bootcamp.mscustomer.common.ApiResponse;
-import com.bootcamp.mscustomer.models.dto.CustomerDTO;
 import com.bootcamp.mscustomer.models.entities.Customer;
 import com.bootcamp.mscustomer.services.CustomerService;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -47,16 +47,15 @@ public class CustomerController {
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public Mono<Customer> create(@Valid @RequestBody Customer request) {
+    @PostMapping(produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
+    public Mono<ApiResponse<Object>> create(@Valid @RequestBody Customer request) {
         LOGGER.info("create: {}", request);
-        return customerService.save(request);
-    }
-
-    @PostMapping("/all")
-    public Mono<ApiResponse<Object>> createAll(@Valid @RequestBody Customer request) {
-        LOGGER.info("create: {}", request);
-        return customerService.saveAll(request);
+        return customerService.save(request).flatMap(customerCreate -> Mono.just(
+                ApiResponse.builder()
+                .message("Product created successfully")
+                .status(HttpStatus.CREATED)
+                .data(customerCreate)
+                .build()));
     }
 
     @PutMapping
