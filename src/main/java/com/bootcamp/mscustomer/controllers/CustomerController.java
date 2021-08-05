@@ -25,14 +25,6 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-    @GetMapping("/{customer}")
-    public Mono<ResponseEntity<Customer>> findByCustomer(@PathVariable("customer") String name) {
-        LOGGER.info("findByCustomer: customerName={}", name);
-        return customerService.findByName(name)
-                .map(saveCustomer -> ResponseEntity.ok(saveCustomer))
-                .defaultIfEmpty(ResponseEntity.notFound().build());
-    }
-
     @GetMapping
     public Flux<Customer> findAll() {
         LOGGER.info("findAll");
@@ -52,18 +44,22 @@ public class CustomerController {
         LOGGER.info("create: {}", request);
         return customerService.save(request).flatMap(customerCreate -> Mono.just(
                 ApiResponse.builder()
-                .message("Product created successfully")
+                .message("Customer created successfully")
                 .status(HttpStatus.CREATED)
                 .data(customerCreate)
                 .build()));
     }
 
-    @PutMapping
-    public Mono<ResponseEntity<Customer>> update(@PathVariable(value = "id") String id,
+    @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
+    public Mono<ApiResponse<Object>> update(@PathVariable(value = "id") String id,
                                  @Valid @RequestBody Customer customer) {
         LOGGER.info("update: {}", customer);
         return customerService.update(id, customer)
-                .map(updateCustomer -> new ResponseEntity<>(updateCustomer, HttpStatus.OK))
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+                .flatMap(customerUpdate -> Mono.just(
+                    ApiResponse.builder()
+                    .message("Customer update successfully")
+                    .status(HttpStatus.OK)
+                    .data(customerUpdate)
+                    .build()));
     }
 }

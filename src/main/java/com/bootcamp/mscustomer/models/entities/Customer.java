@@ -20,7 +20,7 @@ public class Customer {
     @NotBlank
     private String code;
     private String iban;
-    @Size(max = 140)
+    @Size(max = 40)
     private String name;
     private String surname;
     @Size(max = 75)

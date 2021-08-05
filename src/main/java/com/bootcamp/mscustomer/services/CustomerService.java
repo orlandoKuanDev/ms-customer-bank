@@ -1,5 +1,6 @@
 package com.bootcamp.mscustomer.services;
 
+import com.bootcamp.mscustomer.Exception.ValidationService;
 import com.bootcamp.mscustomer.common.ApiResponse;
 import com.bootcamp.mscustomer.models.dto.CustomerDTO;
 import com.bootcamp.mscustomer.models.entities.Customer;
@@ -24,6 +25,9 @@ public class CustomerService implements ICustomerService{
     @Autowired
     private CustomerTypeRepository customerTypeRepository;
 
+    @Autowired
+    private ValidationService validationService;
+
     @Override
     public Flux<Customer> findAll() {
         return customerRepository.findAll();
@@ -33,7 +37,6 @@ public class CustomerService implements ICustomerService{
     public Mono<Customer> findById(String id) {
         return customerRepository.findById(id);
     }
-
     @Override
     public Mono<Customer> findByName(String name) {
         return customerRepository.findByName(name);
@@ -46,6 +49,9 @@ public class CustomerService implements ICustomerService{
 
     @Override
     public Mono<Customer> update(String id, Customer customer) {
+        validationService.validate(customer);
+        log.info("CUSTOMER_DATA: {}", customer);
+        log.info("CUSTOMER_DATA_ID: {}", id);
         return customerRepository.findById(id)
                 .flatMap(existCustomer -> {
                     existCustomer.setName(customer.getName());
@@ -54,9 +60,9 @@ public class CustomerService implements ICustomerService{
                     existCustomer.setPhone(customer.getPhone());
                     existCustomer.setAddress(customer.getAddress());
                     existCustomer.setSurname(customer.getSurname());
+                    existCustomer.setCustomerType(customer.getCustomerType());
                     return customerRepository.save(existCustomer);
-                })
-                .switchIfEmpty(Mono.empty());
+                }).switchIfEmpty(Mono.empty());
     }
 
     @Override
