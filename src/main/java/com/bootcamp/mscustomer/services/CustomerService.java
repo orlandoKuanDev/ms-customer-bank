@@ -55,11 +55,10 @@ public class CustomerService implements ICustomerService{
         return customerRepository.findById(id)
                 .flatMap(existCustomer -> {
                     existCustomer.setName(customer.getName());
-                    existCustomer.setCode(customer.getCode());
-                    existCustomer.setIban(customer.getIban());
+                    existCustomer.setCustomerIdentityType(customer.getCustomerIdentityType());
+                    existCustomer.setCustomerIdentityNumber(customer.getCustomerIdentityNumber());
                     existCustomer.setPhone(customer.getPhone());
                     existCustomer.setAddress(customer.getAddress());
-                    existCustomer.setSurname(customer.getSurname());
                     existCustomer.setCustomerType(customer.getCustomerType());
                     return customerRepository.save(existCustomer);
                 }).switchIfEmpty(Mono.empty());

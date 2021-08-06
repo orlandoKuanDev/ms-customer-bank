@@ -4,6 +4,7 @@ import lombok.*;
 //import org.hibernate.annotations.NaturalId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
@@ -18,17 +19,22 @@ public class Customer {
     @Id
     private String id;
     @NotBlank
-    private String code;
-    private String iban;
+    @Field(name = "customerIdentityType")
+    private String customerIdentityType;
+    @Field(name = "customerIdentityNumber")
+    private String customerIdentityNumber;
     @Size(max = 40)
+    @Field(name = "name")
     private String name;
-    private String surname;
     @Size(max = 75)
     @Email
+    @Field(name = "email")
     private String email;
     @Size(max = 9)
+    @Field(name = "phone")
     private String phone;
+    @Field(name = "address")
     private String address;
-    @Valid
+    @Field(name = "customerType")
     private CustomerType customerType;
 }
