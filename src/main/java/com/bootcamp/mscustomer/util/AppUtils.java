@@ -5,14 +5,15 @@ import com.bootcamp.mscustomer.models.entities.Customer;
 
 public class AppUtils {
     public static CustomerDTO entityToDto(Customer customer) {
-        return CustomerDTO.builder()
+        return null;
+        /*return CustomerDTO.builder()
                 .code(customer.getCode())
                 .iban(customer.getIban())
                 .name(customer.getName())
                 .phone(customer.getPhone())
                 .surname(customer.getSurname())
                 .address(customer.getAddress())
-                .build();
+                .build();*/
     }
 
     public static Customer dtoToEntity(CustomerDTO customerDTO) {
