@@ -18,4 +18,6 @@ public interface ICustomerService {
     public Mono<Customer> update(String id, Customer message);
 
     public Mono<Void> delete(Customer customer);
+
+    public Mono<CustomerDTO> findByCustomerIdentityNumber(String customerIdentityNumber);
 }

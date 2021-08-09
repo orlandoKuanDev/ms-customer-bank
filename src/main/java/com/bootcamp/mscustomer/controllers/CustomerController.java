@@ -1,6 +1,7 @@
 package com.bootcamp.mscustomer.controllers;
 
 import com.bootcamp.mscustomer.common.ApiResponse;
+import com.bootcamp.mscustomer.models.dto.CustomerDTO;
 import com.bootcamp.mscustomer.models.entities.Customer;
 import com.bootcamp.mscustomer.services.CustomerService;
 import lombok.extern.slf4j.Slf4j;
@@ -61,5 +62,13 @@ public class CustomerController {
                     .status(HttpStatus.OK)
                     .data(customerUpdate)
                     .build()));
+    }
+
+    @GetMapping("/findCustomerCredit/{customerIdentityNumber}")
+    public Mono<ResponseEntity<CustomerDTO>> findCustomerCredit(@PathVariable String customerIdentityNumber){
+        LOGGER.info("findByCustomerIdentityNumber: customerIdentityNumber={}", customerIdentityNumber);
+        return customerService.findByCustomerIdentityNumber(customerIdentityNumber)
+                .map(saveCustomer -> ResponseEntity.ok(saveCustomer))
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 }

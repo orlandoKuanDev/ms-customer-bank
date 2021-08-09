@@ -1,10 +1,8 @@
 package com.bootcamp.mscustomer.models.dto;
 
 import com.bootcamp.mscustomer.models.entities.CustomerType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -12,13 +10,10 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Setter
+@Getter
 public class CustomerDTO {
-    private String id;
-    private String code;
-    private String iban;
     private String name;
-    private String surname;
-    private String phone;
-    private String address;
-    private CustomerType customerType;
+    private String customerIdentityType;
+    private String customerIdentityNumber;
 }
