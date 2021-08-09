@@ -68,4 +68,9 @@ public class CustomerService implements ICustomerService{
     public Mono<Void> delete(Customer customer) {
         return customerRepository.delete(customer);
     }
+
+    @Override
+    public Mono<CustomerDTO> findByCustomerIdentityNumber(String customerIdentityNumber) {
+        return customerRepository.findByCustomerIdentityNumber(customerIdentityNumber);
+    }
 }
