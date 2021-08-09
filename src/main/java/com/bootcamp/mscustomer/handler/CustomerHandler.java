@@ -77,7 +77,7 @@ public class CustomerHandler {
         return bill.flatMap(customerEdit ->
                         customerService.findByCustomerIdentityNumber(customerEdit.getCustomerIdentityNumber())
                         .flatMap(currentCustomer -> {
-                            currentCustomer.setCustomerType(customerEdit.getCustomerType());
+                            currentCustomer.setCustomerIdentityType(customerEdit.getCustomerIdentityType());
                             currentCustomer.setCustomerIdentityNumber(customerEdit.getCustomerIdentityNumber());
                             currentCustomer.setName(customerEdit.getName());
                             currentCustomer.setAddress(customerEdit.getAddress());

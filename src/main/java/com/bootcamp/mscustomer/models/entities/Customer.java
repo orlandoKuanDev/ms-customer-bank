@@ -23,6 +23,8 @@ public class Customer {
     private String customerIdentityType;
     @Field(name = "customerIdentityNumber")
     private String customerIdentityNumber;
+    @Field(name = "customerType")
+    private String customerType;
     @Size(max = 40)
     @Field(name = "name")
     private String name;
@@ -35,6 +37,4 @@ public class Customer {
     private String phone;
     @Field(name = "address")
     private String address;
-    @Field(name = "customerType")
-    private CustomerType customerType;
 }
