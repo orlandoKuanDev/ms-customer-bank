@@ -14,5 +14,6 @@ public class CustomerType {
     @Id
     @NotEmpty
     private String id;
+    private String code;
     private String name;
 }

@@ -13,6 +13,8 @@ import javax.validation.constraints.Size;
 @Setter
 @Getter
 public class CustomerDTO {
+
+    private String id;
     private String name;
     private String customerIdentityType;
     private String customerIdentityNumber;

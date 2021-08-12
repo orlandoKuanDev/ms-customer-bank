@@ -1,4 +1,4 @@
-package com.bootcamp.mscustomer.services;
+package com.bootcamp.mscustomer.services.Impl;
 
 import com.bootcamp.mscustomer.Exception.ValidationService;
 import com.bootcamp.mscustomer.common.ApiResponse;
@@ -7,6 +7,7 @@ import com.bootcamp.mscustomer.models.entities.Customer;
 import com.bootcamp.mscustomer.models.entities.CustomerType;
 import com.bootcamp.mscustomer.repositories.CustomerRepository;
 import com.bootcamp.mscustomer.repositories.CustomerTypeRepository;
+import com.bootcamp.mscustomer.services.ICustomerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import reactor.core.publisher.Mono;
 
 @Service
 @Slf4j(topic = "CUSTOMER_SERVICE")
-public class CustomerService implements ICustomerService{
+public class CustomerServiceImpl implements ICustomerService {
 
     @Autowired
     private CustomerRepository customerRepository;
