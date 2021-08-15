@@ -72,6 +72,8 @@ public class CustomerServiceImpl implements ICustomerService {
 
     @Override
     public Mono<CustomerDTO> findByCustomerIdentityNumber(String customerIdentityNumber) {
-        return customerRepository.findByCustomerIdentityNumber(customerIdentityNumber);
+        return customerRepository.findByCustomerIdentityNumber(customerIdentityNumber)
+                .switchIfEmpty(Mono.just(CustomerDTO.builder()
+                .customerIdentityNumber(null).build()));
     }
 }
