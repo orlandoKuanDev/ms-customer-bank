@@ -9,6 +9,8 @@ import com.bootcamp.mscustomer.repositories.CustomerRepository;
 import com.bootcamp.mscustomer.repositories.CustomerTypeRepository;
 import com.bootcamp.mscustomer.services.ICustomerService;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,8 @@ import reactor.core.publisher.Mono;
 @Service
 @Slf4j(topic = "CUSTOMER_SERVICE")
 public class CustomerServiceImpl implements ICustomerService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerServiceImpl.class);
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -55,6 +59,7 @@ public class CustomerServiceImpl implements ICustomerService {
         log.info("CUSTOMER_DATA_ID: {}", id);
         return customerRepository.findById(id)
                 .flatMap(existCustomer -> {
+
                     existCustomer.setName(customer.getName());
                     existCustomer.setCustomerIdentityType(customer.getCustomerIdentityType());
                     existCustomer.setCustomerIdentityNumber(customer.getCustomerIdentityNumber());
@@ -75,5 +80,21 @@ public class CustomerServiceImpl implements ICustomerService {
         return customerRepository.findByCustomerIdentityNumber(customerIdentityNumber)
                 .switchIfEmpty(Mono.just(CustomerDTO.builder()
                 .customerIdentityNumber(null).build()));
+    }
+
+
+    @Override
+    public Mono<Customer> updateCard(String id, Customer customer) {
+        validationService.validate(customer);
+        log.info("CUSTOMER_DATA: {}", customer);
+        log.info("CUSTOMER_DATA_ID: {}", id);
+        return customerRepository.findById(id)
+                .flatMap(existCustomer -> {
+                    log.info("CUSTOMER Identity Number: {}", customer.getCustomerIdentityNumber());
+                    existCustomer.setCreditCard(customer.getCreditCard());
+                    existCustomer.setDebitCard(customer.getDebitCard());
+                    return customerRepository.save(existCustomer)
+                            .doOnNext(c -> LOGGER.info("Customer Response: Customer={}", c.getName()));
+                });
     }
 }

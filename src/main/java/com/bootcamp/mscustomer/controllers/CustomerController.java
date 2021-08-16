@@ -77,6 +77,19 @@ public class CustomerController {
                     .build()));
     }
 
+    @PutMapping(value = "/cards/{id}")
+    public Mono<ApiResponse<Object>> updateCards(@PathVariable(value = "id") String id,
+                                             @RequestBody Customer customer) {
+        LOGGER.info("update: {}", customer);
+        return service.updateCard(id, customer)
+                .flatMap(customerUpdate -> Mono.just(
+                        ApiResponse.builder()
+                                .message("Customer update successfully")
+                                .status(HttpStatus.OK)
+                                .data(customerUpdate)
+                                .build()));
+    }
+
     @GetMapping("/findCustomerCredit/{customerIdentityNumber}")
     public Mono<ResponseEntity<CustomerDTO>> findCustomerCredit(@PathVariable String customerIdentityNumber){
         LOGGER.info("findByCustomerIdentityNumber: customerIdentityNumber={}", customerIdentityNumber);

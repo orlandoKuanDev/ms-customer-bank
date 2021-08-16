@@ -1,5 +1,7 @@
 package com.bootcamp.mscustomer.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 //import org.hibernate.annotations.NaturalId;
 import org.springframework.data.annotation.Id;
@@ -10,15 +12,18 @@ import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 @Document(collection = "customers")
 @Getter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Setter
+@Builder
 @AllArgsConstructor
 public class Customer {
     @Id
     private String id;
-    @NotBlank
+
     @Field(name = "customerIdentityType")
     private String customerIdentityType;
     @Field(name = "customerIdentityNumber")
@@ -37,4 +42,10 @@ public class Customer {
     private String address;
     @Field(name = "customerType")
     private CustomerType customerType;
+
+    private String debitCard;
+
+    private String creditCard;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime dateOperation = LocalDateTime.now();
 }
