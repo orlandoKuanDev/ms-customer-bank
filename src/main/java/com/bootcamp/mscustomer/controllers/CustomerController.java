@@ -64,7 +64,7 @@ public class CustomerController {
                 .switchIfEmpty(Mono.just(new ResponseEntity<>(HttpStatus.BAD_REQUEST)));
     }
 
-    @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
+    @PutMapping(value = "/{id}")
     public Mono<ApiResponse<Object>> update(@PathVariable(value = "id") String id,
                                  @Valid @RequestBody Customer customer) {
         LOGGER.info("update: {}", customer);
@@ -91,7 +91,7 @@ public class CustomerController {
     }
 
     @GetMapping("/findCustomerCredit/{customerIdentityNumber}")
-    public Mono<ResponseEntity<CustomerDTO>> findCustomerCredit(@PathVariable String customerIdentityNumber){
+    public Mono<ResponseEntity<Customer>> findCustomerCredit(@PathVariable String customerIdentityNumber){
         LOGGER.info("findByCustomerIdentityNumber: customerIdentityNumber={}", customerIdentityNumber);
         return service.findByCustomerIdentityNumber(customerIdentityNumber)
                 .map(saveCustomer -> ResponseEntity.ok(saveCustomer))

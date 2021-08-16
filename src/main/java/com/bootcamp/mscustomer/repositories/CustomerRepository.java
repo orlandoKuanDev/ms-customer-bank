@@ -11,5 +11,5 @@ import reactor.core.publisher.Mono;
 public interface CustomerRepository extends ReactiveCrudRepository<Customer, String> {
     Mono<Customer> findById(String id);
     Mono<Customer> findByName(String name);
-    Mono<CustomerDTO> findByCustomerIdentityNumber(String customerIdentityNumber);
+    Mono<Customer> findByCustomerIdentityNumber(String customerIdentityNumber);
 }

@@ -19,7 +19,7 @@ public interface ICustomerService {
 
     public Mono<Void> delete(Customer customer);
 
-    public Mono<CustomerDTO> findByCustomerIdentityNumber(String customerIdentityNumber);
+    public Mono<Customer> findByCustomerIdentityNumber(String customerIdentityNumber);
 
     public Mono<Customer> updateCard(String id, Customer customer);
 }
