@@ -47,7 +47,7 @@ public class CustomerHandler {
                         .switchIfEmpty(Mono.error(new EntityNotFoundException(MSJ_ERROR_FIND_CUSTOMER)))
         );
     }
-    @CircuitBreaker(name = CIRCUIT_BREAKER, fallbackMethod = "customerFallback")
+    //@CircuitBreaker(name = CIRCUIT_BREAKER, fallbackMethod = "customerFallback")
     public Mono<ServerResponse> findByCustomerIdentityNumber(ServerRequest request){
         String customerIdentityNumber = request.pathVariable("customerIdentityNumber");
         return errorHandler(
@@ -55,7 +55,7 @@ public class CustomerHandler {
                                 .contentType(APPLICATION_JSON)
                                 .bodyValue(customer))
                         .switchIfEmpty(Mono.error(new EntityNotFoundException(
-                                String.format("THE PRODUCT NAME DONT EXIST IN MICRO SERVICE PRODUCT-> %s", customerIdentityNumber)
+                                String.format("THE CUSTOMER DOES NOT EXIST IN MICRO SERVICE PRODUCT-> %s", customerIdentityNumber)
                         )))
         );
     }
