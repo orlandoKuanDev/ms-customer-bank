@@ -5,10 +5,12 @@ import com.bootcamp.mscustomer.models.dto.CustomerDTO;
 import com.bootcamp.mscustomer.models.entities.Customer;
 import com.bootcamp.mscustomer.services.Impl.CustomerServiceImpl;
 import com.bootcamp.mscustomer.services.Impl.CustomerTypeServiceImpl;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,8 @@ import javax.validation.Valid;
 public class CustomerController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerController.class);
 
+    private final String CIRCUIT = "customerServiceCircuitBreaker";
+
     @Autowired
     private CustomerServiceImpl service;
 
@@ -36,6 +40,7 @@ public class CustomerController {
         return service.findAll();
     }
 
+    @CircuitBreaker(name = CIRCUIT, fallbackMethod = "fallback")
     @GetMapping("/{id}")
     public Mono<ResponseEntity<Customer>> findById(@PathVariable("id") String id) {
         LOGGER.info("findById: id={}", id);
@@ -75,6 +80,13 @@ public class CustomerController {
                     .status(HttpStatus.OK)
                     .data(customerUpdate)
                     .build()));
+    }
+
+    public Mono<ResponseEntity<Customer>> fallback(){
+        LOGGER.info("Entra al fallBack");
+        return Mono.just(Customer.builder().build())
+                .map(saveCustomer -> ResponseEntity.ok(saveCustomer))
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     @PutMapping(value = "/cards/{id}")
