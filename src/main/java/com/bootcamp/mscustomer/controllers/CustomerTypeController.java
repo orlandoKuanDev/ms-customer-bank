@@ -1,8 +1,6 @@
 package com.bootcamp.mscustomer.controllers;
 
-import com.bootcamp.mscustomer.models.entities.Customer;
 import com.bootcamp.mscustomer.models.entities.CustomerType;
-import com.bootcamp.mscustomer.repositories.CustomerTypeRepository;
 import com.bootcamp.mscustomer.services.ICustomerTypeService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -11,13 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.server.ServerRequest;
-import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/customertype")
+@RequestMapping("/customer/type")
 @Slf4j(topic = "CUSTOMER_TYPE_CONTROLLER")
 public class CustomerTypeController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerTypeController.class);
