@@ -20,6 +20,9 @@ import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 
+/**
+ * The type Customer controller.
+ */
 @RestController
 @RequestMapping("/customer")
 @Slf4j
@@ -34,12 +37,23 @@ public class CustomerController {
     @Autowired
     private CustomerTypeServiceImpl typeService;
 
+    /**
+     * Find all flux.
+     *
+     * @return the flux
+     */
     @GetMapping
     public Flux<Customer> findAll() {
         LOGGER.info("findAll");
         return service.findAll();
     }
 
+    /**
+     * Find by id mono.
+     *
+     * @param id the id
+     * @return the mono
+     */
     @CircuitBreaker(name = CIRCUIT, fallbackMethod = "fallback")
     @GetMapping("/{id}")
     public Mono<ResponseEntity<Customer>> findById(@PathVariable("id") String id) {
@@ -49,6 +63,13 @@ public class CustomerController {
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
+    /**
+     * Create mono.
+     *
+     * @param code    the code
+     * @param request the request
+     * @return the mono
+     */
     @PostMapping
     public Mono<ResponseEntity<Customer>> create(@RequestParam String code , @RequestBody Mono<Customer> request) {
         LOGGER.info("create: {}", request);
@@ -69,6 +90,13 @@ public class CustomerController {
                 .switchIfEmpty(Mono.just(new ResponseEntity<>(HttpStatus.BAD_REQUEST)));
     }
 
+    /**
+     * Update mono.
+     *
+     * @param id       the id
+     * @param customer the customer
+     * @return the mono
+     */
     @PutMapping(value = "/{id}")
     public Mono<ApiResponse<Object>> update(@PathVariable(value = "id") String id,
                                  @Valid @RequestBody Customer customer) {
@@ -82,6 +110,11 @@ public class CustomerController {
                     .build()));
     }
 
+    /**
+     * Fallback mono.
+     *
+     * @return the mono
+     */
     public Mono<ResponseEntity<Customer>> fallback(){
         LOGGER.info("Entra al fallBack");
         return Mono.just(Customer.builder().build())
@@ -89,6 +122,13 @@ public class CustomerController {
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
+    /**
+     * Update cards mono.
+     *
+     * @param id       the id
+     * @param customer the customer
+     * @return the mono
+     */
     @PutMapping(value = "/cards/{id}")
     public Mono<ApiResponse<Object>> updateCards(@PathVariable(value = "id") String id,
                                              @RequestBody Customer customer) {
@@ -102,6 +142,12 @@ public class CustomerController {
                                 .build()));
     }
 
+    /**
+     * Find customer credit mono.
+     *
+     * @param customerIdentityNumber the customer identity number
+     * @return the mono
+     */
     @GetMapping("/findCustomerCredit/{customerIdentityNumber}")
     public Mono<ResponseEntity<Customer>> findCustomerCredit(@PathVariable String customerIdentityNumber){
         LOGGER.info("findByCustomerIdentityNumber: customerIdentityNumber={}", customerIdentityNumber);
@@ -110,6 +156,12 @@ public class CustomerController {
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
+    /**
+     * Delete customer type mono.
+     *
+     * @param id the id
+     * @return the mono
+     */
     @DeleteMapping("/{id}")
     public Mono<ResponseEntity<Void>> deleteCustomerType(@PathVariable String id){
 

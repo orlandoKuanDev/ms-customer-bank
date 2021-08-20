@@ -30,16 +30,34 @@ public class ApiError {
         timestamp = LocalDateTime.now();
     }
 
+    /**
+     * Instantiates a new Api error.
+     *
+     * @param status the status
+     */
     public ApiError(HttpStatus status) {
         this();
         this.status = status;
     }
+
+    /**
+     * Instantiates a new Api error.
+     *
+     * @param status  the status
+     * @param message the message
+     */
     public ApiError(HttpStatus status, String message) {
         this();
         this.status = status;
         this.message = message;
     }
 
+    /**
+     * Instantiates a new Api error.
+     *
+     * @param status the status
+     * @param ex     the ex
+     */
     public ApiError(HttpStatus status, Throwable ex) {
         this();
         this.status = status;
@@ -47,6 +65,13 @@ public class ApiError {
         this.debugMessage = ex.getLocalizedMessage();
     }
 
+    /**
+     * Instantiates a new Api error.
+     *
+     * @param status  the status
+     * @param message the message
+     * @param ex      the ex
+     */
     public ApiError(HttpStatus status, String message, Throwable ex) {
         this();
         this.status = status;
@@ -65,6 +90,12 @@ public class ApiError {
         addSubError(new ApiValidationError(object, field, rejectedValue, message));
     }
 
+    /**
+     * Add validation error.
+     *
+     * @param object  the object
+     * @param message the message
+     */
     public void addValidationError(String object, String message) {
         addSubError(new ApiValidationError(object, message));
     }
@@ -77,6 +108,11 @@ public class ApiError {
                 fieldError.getDefaultMessage());
     }
 
+    /**
+     * Add validation errors.
+     *
+     * @param fieldErrors the field errors
+     */
     public void addValidationErrors(List<FieldError> fieldErrors) {
         fieldErrors.forEach(this::addValidationError);
     }
@@ -87,6 +123,11 @@ public class ApiError {
                 objectError.getDefaultMessage());
     }
 
+    /**
+     * Add validation error.
+     *
+     * @param globalErrors the global errors
+     */
     public void addValidationError(List<ObjectError> globalErrors) {
         globalErrors.forEach(this::addValidationError);
     }
@@ -104,6 +145,11 @@ public class ApiError {
                 cv.getMessage());
     }
 
+    /**
+     * Add validation errors.
+     *
+     * @param constraintViolations the constraint violations
+     */
     public void addValidationErrors(Set<ConstraintViolation<?>> constraintViolations) {
         constraintViolations.forEach(this::addValidationError);
     }

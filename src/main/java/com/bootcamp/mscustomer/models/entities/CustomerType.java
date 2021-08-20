@@ -5,6 +5,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotEmpty;
 
+/**
+ * The type Customer type.
+ */
 @Document(collection = "customer_type")
 @Getter
 @Setter

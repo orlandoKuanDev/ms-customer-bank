@@ -19,6 +19,9 @@ import java.io.*;
 import java.nio.channels.*;
 import java.util.Properties;
 
+/**
+ * The type Maven wrapper downloader.
+ */
 public class MavenWrapperDownloader {
 
     private static final String WRAPPER_VERSION = "0.5.6";
@@ -46,6 +49,11 @@ public class MavenWrapperDownloader {
      */
     private static final String PROPERTY_NAME_WRAPPER_URL = "wrapperUrl";
 
+    /**
+     * Main.
+     *
+     * @param args the args
+     */
     public static void main(String args[]) {
         System.out.println("- Downloader started");
         File baseDirectory = new File(args[0]);

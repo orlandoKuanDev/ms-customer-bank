@@ -6,6 +6,9 @@ import lombok.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+/**
+ * The type Customer dto.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

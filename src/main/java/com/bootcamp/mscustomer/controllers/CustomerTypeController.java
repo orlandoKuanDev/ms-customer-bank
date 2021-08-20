@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+/**
+ * The type Customer type controller.
+ */
 @RestController
 @RequestMapping("/customer/type")
 @Slf4j(topic = "CUSTOMER_TYPE_CONTROLLER")
@@ -21,12 +24,23 @@ public class CustomerTypeController {
     @Autowired
     private ICustomerTypeService service;
 
+    /**
+     * Find all flux.
+     *
+     * @return the flux
+     */
     @GetMapping
     public Flux<CustomerType> findAll() {
         LOGGER.info("findAll");
         return service.findAll();
     }
 
+    /**
+     * New customer type mono.
+     *
+     * @param customerType the customer type
+     * @return the mono
+     */
     @PostMapping
     public Mono<ResponseEntity<CustomerType>> newCustomerType(@RequestBody CustomerType customerType){
         return service.save(customerType)
@@ -36,6 +50,12 @@ public class CustomerTypeController {
                 .body(c));
     }
 
+    /**
+     * Delete customer type mono.
+     *
+     * @param id the id
+     * @return the mono
+     */
     @DeleteMapping("/{id}")
     public Mono<ResponseEntity<Void>> deleteCustomerType(@PathVariable String id){
 

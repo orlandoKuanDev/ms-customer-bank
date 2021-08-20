@@ -18,6 +18,9 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+/**
+ * The type Customer service.
+ */
 @Service
 @Slf4j(topic = "CUSTOMER_SERVICE")
 public class CustomerServiceImpl implements ICustomerService {

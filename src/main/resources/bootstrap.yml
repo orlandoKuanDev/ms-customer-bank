@@ -1,6 +1,8 @@
 spring:
   application:
     name: customer-service
+  profiles:
+    active: dev                   #docker -> docker | dev -> dev
   cloud:
     config:
-      uri: http://localhost:8762
+      uri: http://localhost:8762  #http://config-server:8762 -> docker | http://localhost:8762 -> dev

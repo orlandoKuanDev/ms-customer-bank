@@ -7,6 +7,11 @@ import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 
+/**
+ * The type Api response.
+ *
+ * @param <T> the type parameter
+ */
 @Getter
 @Setter
 @NoArgsConstructor

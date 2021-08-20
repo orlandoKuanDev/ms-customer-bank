@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+/**
+ * The type Customer type service.
+ */
 @Service
 public class CustomerTypeServiceImpl implements ICustomerTypeService {
 
