@@ -31,9 +31,6 @@ public class CustomerServiceImpl implements ICustomerService {
     private CustomerRepository customerRepository;
 
     @Autowired
-    private CustomerTypeRepository customerTypeRepository;
-
-    @Autowired
     private ValidationService validationService;
 
     @Override
@@ -94,8 +91,6 @@ public class CustomerServiceImpl implements ICustomerService {
         return customerRepository.findById(id)
                 .flatMap(existCustomer -> {
                     log.info("CUSTOMER Identity Number: {}", customer.getCustomerIdentityNumber());
-                    existCustomer.setCreditCard(customer.getCreditCard());
-                    existCustomer.setDebitCard(customer.getDebitCard());
                     return customerRepository.save(existCustomer)
                             .doOnNext(c -> LOGGER.info("Customer Response: Customer={}", c.getName()));
                 });

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 //import org.hibernate.annotations.NaturalId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -29,6 +30,7 @@ public class Customer {
 
     @Field(name = "customerIdentityType")
     private String customerIdentityType;
+    @Indexed(unique=true)
     @Field(name = "customerIdentityNumber")
     private String customerIdentityNumber;
     @Size(max = 40)
@@ -45,10 +47,6 @@ public class Customer {
     private String address;
     @Field(name = "customerType")
     private CustomerType customerType;
-
-    private String debitCard;
-
-    private String creditCard;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dateOperation = LocalDateTime.now();
 }
