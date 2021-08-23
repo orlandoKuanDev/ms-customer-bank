@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 spring:
   application:
     name: service-customer
@@ -6,3 +7,12 @@ spring:
       uri: http://localhost:8090
   profiles:
     active: dev
+=======
+spring:
+  application:
+    name: service-customer
+  cloud:
+    config:
+      uri: http://localhost:8090
+  profiles:    active: dev
+>>>>>>> master
