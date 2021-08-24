@@ -2,7 +2,9 @@ spring:
   application:
     name: customer-service
   profiles:
-    active: dev                   #docker -> docker | dev -> dev
+    active: prd                   #docker -> docker | dev -> dev | prd -> prd
   cloud:
     config:
-      uri: http://localhost:8762  #http://config-server:8762 -> docker | http://localhost:8762 -> dev
+      uri: http://config-server-bank.azurewebsites.net
+      #http://config-server:8762 -> docker | http://localhost:8762 -> dev
+      #http://config-server-bank.azurewebsites.net -> pdr
