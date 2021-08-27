@@ -1,0 +1,16 @@
+
+version: '3.5'
+services:
+ service-customer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: docker-customer-bank
+    restart: always
+    ports:
+      - 8092:8092
+    network_mode: host
+    environment:
+      - JAVA_OPTS=
+        -Xms256M
+        -Xmx256M
