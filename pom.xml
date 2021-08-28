@@ -93,6 +93,22 @@
             <version>1.7.0</version>
         </dependency>
         <!-- end Resilience4j -->
+
+        <!-- start KAFKA -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>connect-json</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- end KAFKA -->
     </dependencies>
 
     <dependencyManagement>
