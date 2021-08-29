@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 @Component
 public class CustomerConsumer {
     private final static String SERVICE_WALLET_TOPIC = "service-wallet-topic";
-    private final static String GROUP_ID = "customer-group";
+    private final static String GROUP_ID = "customer2-group";
 
     private final ICustomerService customerService;
     private final ObjectMapper objectMapper;
