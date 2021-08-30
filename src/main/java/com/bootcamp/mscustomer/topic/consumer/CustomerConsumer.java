@@ -13,8 +13,8 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @Component
 public class CustomerConsumer {
-    private final static String SERVICE_WALLET_TOPIC = "service-wallet-topic";
-    private final static String GROUP_ID = "customer2-group";
+    private final static String SERVICE_CREATE_CUSTOMER_TOPIC = "service-create-customer-topic";
+    private final static String GROUP_ID = "customer-group";
 
     private final ICustomerService customerService;
     private final ObjectMapper objectMapper;
@@ -25,7 +25,7 @@ public class CustomerConsumer {
         this.objectMapper = objectMapper;
     }
 
-    @KafkaListener( topics = SERVICE_WALLET_TOPIC, groupId = GROUP_ID)
+    @KafkaListener( topics = SERVICE_CREATE_CUSTOMER_TOPIC, groupId = GROUP_ID)
     public Disposable retrieveSavedCustomer(String data) throws Exception {
         log.info("data from kafka listener (customer) =>"+data);
         Customer customer= objectMapper.readValue(data, Customer.class );
