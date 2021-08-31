@@ -50,14 +50,13 @@ public class CustomerHandler {
     //@CircuitBreaker(name = CIRCUIT_BREAKER, fallbackMethod = "customerFallback")
     public Mono<ServerResponse> findByCustomerIdentityNumber(ServerRequest request){
         String customerIdentityNumber = request.pathVariable("customerIdentityNumber");
-        return errorHandler(
-                customerService.findByCustomerIdentityNumber(customerIdentityNumber).flatMap(customer -> ServerResponse.ok()
-                                .contentType(APPLICATION_JSON)
-                                .bodyValue(customer))
-                        .switchIfEmpty(Mono.error(new EntityNotFoundException(
-                                String.format("THE CUSTOMER DOES NOT EXIST IN MICRO SERVICE PRODUCT-> %s", customerIdentityNumber)
-                        )))
-        );
+        return customerService.findByCustomerIdentityNumber(customerIdentityNumber).flatMap(customer -> ServerResponse.ok()
+                        .contentType(APPLICATION_JSON)
+                        .bodyValue(customer))
+                .switchIfEmpty(Mono.error(new EntityNotFoundException(
+                        String.format("THE CUSTOMER DOES NOT EXIST IN MICRO SERVICE PRODUCT-> %s", customerIdentityNumber)
+                )))
+                .onErrorResume(error -> Mono.error(new RuntimeException("The customer does not exist")));
     }
 
     public Mono<ServerResponse> save(ServerRequest request){

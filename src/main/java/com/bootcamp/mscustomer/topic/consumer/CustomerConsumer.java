@@ -28,11 +28,28 @@ public class CustomerConsumer {
     @KafkaListener( topics = SERVICE_CREATE_CUSTOMER_TOPIC, groupId = GROUP_ID)
     public Disposable retrieveSavedCustomer(String data) throws Exception {
         log.info("data from kafka listener (customer) =>"+data);
-        Customer customer= objectMapper.readValue(data, Customer.class );
-
+        Customer customer = objectMapper.readValue(data, Customer.class );
         return Mono.just(customer)
+                .zipWhen(customerRequest -> {
+                    return customerService.findByCustomerIdentityNumber(customerRequest.getCustomerIdentityNumber())
+                            .switchIfEmpty(Mono.defer(() -> {
+                                return Mono.just(new Customer());
+                            }));
+                })
+                .flatMap(dataCustomer -> {
+                    log.info("customerService (data) =>"+ dataCustomer.getT2().getCustomerIdentityNumber());
+                    log.info("customerService (data) =>"+ dataCustomer.getT1().getCustomerIdentityNumber());
+                    if(dataCustomer.getT2().getCustomerIdentityNumber() == null){
+                        return customerService.create(dataCustomer.getT1());
+                    }else {
+                        return customerService.findByName(dataCustomer.getT1().getName());
+                    }
+                })
+                .log()
+                .subscribe();
+      /*  return Mono.just(customer)
                 .log()
                 .flatMap(customerService::create)
-                .subscribe();
+                .subscribe();*/
     }
 }
