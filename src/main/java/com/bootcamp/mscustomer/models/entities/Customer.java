@@ -16,6 +16,7 @@ import javax.validation.constraints.Size;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Customer {
     @Id
     private String id;
