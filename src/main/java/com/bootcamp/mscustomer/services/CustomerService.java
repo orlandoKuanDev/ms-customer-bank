@@ -54,11 +54,18 @@ public class CustomerService extends BaseService<Customer, String> implements IC
     }
 
     public Mono<Customer> customerFallback(String customerIdentityNumber, Exception ex) {
-
+        if (ex instanceof EntityNotFoundException) {
+            return  Mono.error(() -> ex);
+        }
         return Mono.just(Customer
                 .builder()
+                .id("Fallback customer" + customerIdentityNumber)
                 .customerIdentityNumber(customerIdentityNumber)
-                .name(ex.getMessage())
+                .name("UNKNOWN_NAME")
+                .customerType("UNKNOWN_TYPE")
+                .email("UNKNOWN_EMAIL")
+                .phone("UNKNOWN_PONE")
+                .address("UNKNOWN_ADDRESS")
                 .build());
     }
 }

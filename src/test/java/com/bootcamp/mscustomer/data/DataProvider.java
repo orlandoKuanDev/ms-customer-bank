@@ -15,4 +15,16 @@ public class DataProvider {
                 .address("Urb.Mariscal Caceres")
                 .build();
     }
+    public static Customer CustomerRequest2() {
+        return Customer.builder()
+                .id("1")
+                .customerIdentityType("RUC")
+                .customerIdentityNumber("2011111111")
+                .customerType("ENTERPRISE")
+                .name("EVERIS PERU SAC")
+                .email("gerencia@everis.pe")
+                .phone("945865844")
+                .address("LIMA")
+                .build();
+    }
 }
