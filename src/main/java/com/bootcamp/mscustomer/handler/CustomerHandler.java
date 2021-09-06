@@ -4,6 +4,7 @@ import com.bootcamp.mscustomer.Exception.EntityNotFoundException;
 import com.bootcamp.mscustomer.models.entities.Customer;
 import com.bootcamp.mscustomer.services.ICustomerService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -21,9 +22,10 @@ import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
+@Slf4j
 @Component
 public class CustomerHandler {
-    private final String CIRCUIT_BREAKER = "customerServiceCircuitBreaker";
+
     private final String MSJ_ERROR_UPDATE_CUSTOMER= "THE CLIENT CANNOT BE UPDATED";
     private final String MSJ_ERROR_FIND_CUSTOMER= "CLIENT DOES NOT EXIST";
     private final ICustomerService customerService;
@@ -37,17 +39,16 @@ public class CustomerHandler {
         return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
                 .body(customerService.findAll(), Customer.class);
     }
-    //@CircuitBreaker(name = CIRCUIT_BREAKER, fallbackMethod = "customerFallback")
+
     public Mono<ServerResponse> findById(ServerRequest request){
         String id = request.pathVariable("id");
-        return errorHandler(
-                customerService.findById(id).flatMap(customer -> ServerResponse.ok()
+        return customerService.findById(id).flatMap(customer -> ServerResponse.ok()
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .bodyValue(customer))
                         .switchIfEmpty(Mono.error(new EntityNotFoundException(MSJ_ERROR_FIND_CUSTOMER)))
-        );
+                        .onErrorResume(error -> Mono.error(new EntityNotFoundException(error.getMessage())));
     }
-    //@CircuitBreaker(name = CIRCUIT_BREAKER, fallbackMethod = "customerFallback")
+
     public Mono<ServerResponse> findByCustomerIdentityNumber(ServerRequest request){
         String customerIdentityNumber = request.pathVariable("customerIdentityNumber");
         return customerService.findByCustomerIdentityNumber(customerIdentityNumber).flatMap(customer -> ServerResponse.ok()
@@ -56,7 +57,7 @@ public class CustomerHandler {
                 .switchIfEmpty(Mono.error(new EntityNotFoundException(
                         String.format("THE CUSTOMER DOES NOT EXIST IN MICRO SERVICE PRODUCT-> %s", customerIdentityNumber)
                 )))
-                .onErrorResume(error -> Mono.error(new RuntimeException("The customer does not exist")));
+                .onErrorResume(error -> Mono.error(new EntityNotFoundException(error.getMessage())));
     }
 
     public Mono<ServerResponse> save(ServerRequest request){
@@ -75,7 +76,7 @@ public class CustomerHandler {
                     return Mono.error(errorResponse);
                 });
     }
-    //@CircuitBreaker(name = CIRCUIT_BREAKER, fallbackMethod = "updateCustomerFallback")
+
     public Mono<ServerResponse> update(ServerRequest request){
         Mono<Customer> bill = request.bodyToMono(Customer.class);
         return bill.flatMap(customerEdit ->
@@ -94,34 +95,4 @@ public class CustomerHandler {
                 .onErrorResume(e -> Mono.error(new RuntimeException("Error update customer")));
     }
 
-    private Mono<ServerResponse> errorHandler(Mono<ServerResponse> response){
-        return response.onErrorResume(error -> {
-            WebClientResponseException errorResponse = (WebClientResponseException) error;
-            if(errorResponse.getStatusCode() == HttpStatus.NOT_FOUND) {
-                Map<String, Object> body = new HashMap<>();
-                body.put("error", "No existe el producto: ".concat(errorResponse.getMessage()));
-                body.put("timestamp", new Date());
-                body.put("status", errorResponse.getStatusCode().value());
-                return ServerResponse.status(HttpStatus.NOT_FOUND).bodyValue(body);
-            }
-            return Mono.error(errorResponse);
-        });
-    }
-
-    public Mono<ServerResponse> customerFallback(ServerRequest request){
-        String customerIdentityNumber = request.pathVariable("customerIdentityNumber");
-        Customer errorCustomer = new Customer();
-        errorCustomer.setCustomerIdentityNumber(customerIdentityNumber);
-        errorCustomer.setName(MSJ_ERROR_UPDATE_CUSTOMER);
-        return ServerResponse.ok()
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(errorCustomer);
-    }
-    /*public Mono<Customer> updateCustomerFallback() {
-        Mono<Customer> bill = request.bodyToMono(Customer.class);
-        Customer errorCustomer = new Customer();
-        errorCustomer.setCustomerIdentityType(identityNumber);
-        errorCustomer.setName(MSJ_ERROR_UPDATE_CUSTOMER);
-        return Mono.just(errorCustomer);
-    }*/
 }

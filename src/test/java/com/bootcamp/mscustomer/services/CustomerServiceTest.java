@@ -4,15 +4,13 @@ import com.bootcamp.mscustomer.Exception.EntityNotFoundException;
 import com.bootcamp.mscustomer.data.DataProvider;
 import com.bootcamp.mscustomer.models.entities.Customer;
 import com.bootcamp.mscustomer.repositories.ICustomerRepository;
+import com.bootcamp.mscustomer.util.CustomMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -24,11 +22,11 @@ class CustomerServiceTest {
 
     ICustomerRepository repository;
     CustomerService mockCustomerService;
-
+    CustomMessage customMessage;
     @BeforeEach
     void setUp() {
         repository = Mockito.mock(ICustomerRepository.class);
-        mockCustomerService = new CustomerService(repository);
+        mockCustomerService = new CustomerService(repository, customMessage);
     }
 
     @Test
@@ -37,7 +35,8 @@ class CustomerServiceTest {
         Mockito.when(repository.findByName(customerRequest.getName()))
                 .thenReturn(Mono.just(customerRequest));
 
-        Mono<Customer> customerName = mockCustomerService.findByName(customerRequest.getName());
+        Mono<Customer> customerName = mockCustomerService
+                .findByName(customerRequest.getName());
 
         StepVerifier.create(customerName)
                 .expectNext(customerRequest)
@@ -46,14 +45,14 @@ class CustomerServiceTest {
     @Test
     void findByName_EntityNotFoundException() {
         Customer customerRequest = DataProvider.CustomerRequest();
-
+        customerRequest.setCustomerIdentityNumber("ORLANDO");
         Mockito.when(repository.findByName(customerRequest.getName()))
-                .thenReturn(Mono.error(() -> new EntityNotFoundException("entity.customer.notNamePresent")));
+                .thenReturn(Mono.error(() -> new EntityNotFoundException(customMessage.getLocalMessage("entity.customer.notNamePresent"))));
 
         Mono<Customer> customerName = mockCustomerService.findByName(customerRequest.getName());
 
         StepVerifier.create(customerName)
-                .expectErrorMatches(new EntityNotFoundException("entity.customer.notNamePresent")::equals)
+                .expectErrorMatches(new EntityNotFoundException(customMessage.getLocalMessage("entity.customer.notNamePresent"))::equals)
                 .verify();
     }
     @Test
@@ -71,14 +70,14 @@ class CustomerServiceTest {
     @Test
     void findByCustomerIdentityNumber_EntityNotFoundException() {
         Customer customerRequest = DataProvider.CustomerRequest();
-
+        customerRequest.setCustomerIdentityNumber("70000000");
         Mockito.when(repository.findByCustomerIdentityNumber(customerRequest.getCustomerIdentityNumber()))
-                .thenReturn(Mono.error(() -> new EntityNotFoundException("entity.customer.notIdentityPresent")));
+                .thenReturn(Mono.error(() -> new EntityNotFoundException(customMessage.getLocalMessage("entity.customer.notIdentityPresent"))));
 
         Mono<Customer> customerIdentityNumber = mockCustomerService.findByCustomerIdentityNumber(customerRequest.getCustomerIdentityNumber());
 
         StepVerifier.create(customerIdentityNumber)
-                .expectErrorMatches(new EntityNotFoundException("entity.customer.notIdentityPresent")::equals)
+                .expectErrorMatches(new EntityNotFoundException(customMessage.getLocalMessage("entity.customer.notIdentityPresent"))::equals)
                 .verify();
     }
 }
